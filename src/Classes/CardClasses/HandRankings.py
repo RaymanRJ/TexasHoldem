@@ -1,5 +1,8 @@
 from enum import Enum
-from Deck import Deck
+from src.Classes.CardClasses.Deck import Deck
+from src.Classes.CardClasses.Card import Card, Suit, Value
+from typing import Tuple, List, Union
+
 
 
 class Rank(Enum):
@@ -14,6 +17,58 @@ class Rank(Enum):
     ONE_PAIR = 9
     HIGH_CARD = 10
 
+class WinningRank:
+    __rank: Rank
+    __cards: List[Card]
+
+    def __init__(self, rank: Rank, cards: List[Card]):
+        self.rank = rank
+        self.cards = cards
+
+    @property
+    def rank(self) -> Rank:
+        return self.__rank
+
+    @rank.setter
+    def rank(self, rank: Rank) -> None:
+        self.__rank = rank
+
+    @property
+    def cards(self) -> List[Card]:
+        return self.__cards
+
+    @cards.setter
+    def cards(self, *cards) -> None:
+        self.__cards.append(*cards)
+        self.__sort_cards()
+
+    def __sort_cards(self) -> None:
+        self.cards.sort(key=lambda card: card.value)
+
+
+def __is_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
+    for suit in Suit:
+        matches = [c for c in deck.cards if c.suit is suit]
+        if len(matches) >= 5:
+            return True, WinningRank(Rank.FLUSH, *matches)
+
+    return False, None
+
+
+def __is_straight_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
+    is_flush, wining_rank = __is_flush(deck)
+    if is_flush:
+        if wining_rank.cards[-1].value - wining_rank.cards[-5] == 4:
+            return True, wining_rank
+    return False, None
+
+
+def __get_pairs(deck: Deck) -> List[Card]:
+    pairs = []
+    for card in deck.cards:
+        for second_card in deck.cards[1:]:
+            if card.value == second_card.value:
+                pairs.append()
 
 def get_rank(deck: Deck) -> Rank:
     if __is_royal_flush(deck):
@@ -36,5 +91,13 @@ def get_rank(deck: Deck) -> Rank:
         return Rank.ONE_PAIR
     return Rank.HIGH_CARD
 
+
+def __is_one_pair(deck: Deck) -> bool:
+    for card in deck.cards:
+        for second_card in deck.cards[1:]:
+            if card.value == second_card.value:
+                return True
+    return False
 def __is_royal_flush(deck: Deck) -> bool:
+    # if any(deck.cards )
     return True
