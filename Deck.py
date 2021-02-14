@@ -1,10 +1,7 @@
-from enum import Enum
-from typing import List, Union
+from typing import List
 from itertools import product
 from random import shuffle
-from Actor import Actor
-
-
+from Card import Card, Suit, Value
 
 
 class Deck:
@@ -30,7 +27,7 @@ class Deck:
     def shuffle_deck(self) -> None:
         shuffle(self.__cards)
 
-    def print_deck(self) -> None:
+    def print(self) -> None:
         for card in self.__cards:
             print(card)
 

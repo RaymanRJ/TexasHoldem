@@ -1,18 +1,13 @@
-from Deck import Deck, Card
-from typing import List
-from enum import Enum
+from Actor import Actor
+from Card import Card
 
 
-class CommunityCards:
-    __deck: Deck
+class CommunityCards(Actor):
 
-    def __init__(self):
-        self.__deck = Deck()
+    def __init__(self, name: str = "CommunityCards"):
+        super().__init__(name)
 
-    def add_card(self, card: Card) -> None:
-        card.revealed = True
-        self.__deck.add_card(card)
-
-    @property
-    def cards(self) -> List[Card]:
-        return self.__deck.cards
+    def add_card(self, *cards: Card) -> None:
+        for card in cards:
+            card.revealed = True
+            super().add_card(card)
