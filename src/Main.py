@@ -14,13 +14,6 @@ game.advance_stage()    # Entering RIVER
 game.community_deal()
 game.betting_round()    # River betting
 
-game.advance_stage()    # Entering Turn
+game.advance_stage()    # Entering TURN
 game.community_deal()
 game.betting_round()    # Final betting
-
-
-
-
-listy = [0, 4, 5, 6, 2, 1, 3]
-print(listy[-1])
-print(listy[-5])
