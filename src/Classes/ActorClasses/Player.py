@@ -1,7 +1,6 @@
 from Actor import Actor
-from Deck import Deck
 from CommunityCards import CommunityCards
-from HandRankings import *
+from src.Classes.CardClasses.HandRankings import *
 
 
 class Player(Actor):

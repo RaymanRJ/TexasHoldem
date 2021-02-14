@@ -2,10 +2,9 @@
 # Actors are anyone that can hold a deck:
 # - Players
 # - Community Cards
-# - Game object
 
-from Deck import Deck
-from Card import Card
+from src.Classes.CardClasses.Deck import Deck
+from src.Classes.CardClasses.Card import Card
 
 
 class Actor:

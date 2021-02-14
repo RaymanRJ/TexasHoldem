@@ -1,9 +1,9 @@
-from Actor import Actor
-from Deck import Deck
+from src.Classes.ActorClasses.Actor import Actor
+from src.Classes.CardClasses.Deck import Deck
 from typing import List
-from Player import Player
+from src.Classes.ActorClasses.Player import Player
 from enum import Enum
-from CommunityCards import CommunityCards
+from src.Classes.ActorClasses.CommunityCards import CommunityCards
 
 
 class Stage(Enum):

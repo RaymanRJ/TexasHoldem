@@ -1,9 +1,8 @@
-from Game import Game
+from src.Classes.Game import Game
 
+# TODO: Review turn order - something's off.
 
-
-
-game = Game(4)
+game = Game(num_players=4)
 game.deal(2)
 game.betting_round()
 

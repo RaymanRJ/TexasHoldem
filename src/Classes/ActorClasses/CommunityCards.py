@@ -1,5 +1,5 @@
 from Actor import Actor
-from Card import Card
+from src.Classes.CardClasses.Card import Card
 
 
 class CommunityCards(Actor):
