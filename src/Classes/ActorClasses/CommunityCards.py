@@ -1,4 +1,4 @@
-from Actor import Actor
+from src.Classes.ActorClasses.Actor import Actor
 from src.Classes.CardClasses.Card import Card
 
 

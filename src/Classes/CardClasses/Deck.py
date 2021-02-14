@@ -1,7 +1,7 @@
 from typing import List
 from itertools import product
 from random import shuffle
-from Card import Card, Suit, Value
+from src.Classes.CardClasses.Card import Card, Suit, Value
 
 
 class Deck:

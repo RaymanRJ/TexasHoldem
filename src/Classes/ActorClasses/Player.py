@@ -1,5 +1,5 @@
-from Actor import Actor
-from CommunityCards import CommunityCards
+from src.Classes.ActorClasses.Actor import Actor
+from src.Classes.ActorClasses.CommunityCards import CommunityCards
 from src.Classes.CardClasses.HandRankings import *
 
 
