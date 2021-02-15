@@ -7,7 +7,7 @@ from src.Classes.CardClasses.Card import Card, Suit, Value
 class Deck:
     __cards: List[Card] = []
 
-    def __init__(self, cards: List[Card] = None):
+    def __init__(self, *cards: Card):
         self.__cards = []
         if cards is not None:
             for card in cards:

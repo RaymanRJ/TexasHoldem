@@ -1,7 +1,7 @@
 from enum import Enum
 from src.Classes.CardClasses.Deck import Deck
 from src.Classes.CardClasses.Card import Card, Suit, Value
-from typing import Tuple, List, Union
+from typing import Tuple, List, Union, Callable
 
 
 
@@ -21,9 +21,9 @@ class WinningRank:
     __rank: Rank
     __cards: List[Card]
 
-    def __init__(self, rank: Rank, cards: List[Card]):
+    def __init__(self, rank: Rank, *cards: Card):
         self.rank = rank
-        self.cards = cards
+        self.__cards = [*cards]
 
     @property
     def rank(self) -> Rank:
@@ -56,24 +56,25 @@ def __is_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
 
 
 def __is_straight(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
-    deck.cards.sort(key=lambda card: card.value)
-    cards = deck.cards
+    deck.cards.sort(key=lambda card: card.value.value)
+    card_values = [c.value for c in deck.cards]
 
     # Edge case: 10, J, Q, K, A --> A is considered a low card.
     values = [Value.ACE, Value.KING, Value.QUEEN, Value.JACK, Value.TEN]
     matches = 0
     for value in values:
-        if any(c.Value for c in cards is value):
+        if card_values.__contains__(value):
+        # if any(c.value for c in cards is value):
             matches += 1
     if matches >= 5:
-        return True, WinningRank(Rank.STRAIGHT, cards)
+        return True, WinningRank(Rank.STRAIGHT, *deck.cards)
 
     # five in a row
-    for pos, card in enumerate(cards):
+    for pos, card in enumerate(deck.cards):
         if pos + 4 > 6:
             return False, None
-        if cards[pos + 4].value == card.value + 4:
-            return True, WinningRank(Rank.STRAIGHT, cards)
+        if deck.cards[pos + 4].value.value == card.value.value + 4:
+            return True, WinningRank(Rank.STRAIGHT, *deck.cards)
 
     return False, None
 
@@ -83,7 +84,7 @@ def __is_straight_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
     is_straight, winning_rank = __is_straight(deck)
 
     if is_straight and is_flush:
-        return True, WinningRank(Rank.STRAIGHT_FLUSH, deck.cards)
+        return True, WinningRank(Rank.STRAIGHT_FLUSH, *deck.cards)
 
     return False, None
 
@@ -91,46 +92,79 @@ def __is_straight_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
 def __is_royal_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
     is_straight_flush, winning_rank = __is_straight_flush(deck)
     if is_straight_flush:
-        if winning_rank.cards[0].value is Value.ACE and winning_rank.cards[-4].value is Value.TEN:
-            return True, winning_rank
+        values = [Value.ACE, Value.KING, Value.QUEEN, Value.JACK, Value.TEN]
+        for value in values:
+            if value not in [card.value for card in deck.cards]:
+            # if not any(card.value for card in winning_rank.cards not in values):
+                return False, None
+        return True, winning_rank
     return False, None
 
 
-def __get_pairs(deck: Deck) -> List[Card]:
-    pairs = []
-    for card in deck.cards:
-        for second_card in deck.cards[1:]:
-            if card.value == second_card.value:
-                pairs.append()
+def __get_pairs(deck: Deck) -> List[Tuple[Card, ...]]:
+    # Ex: [A, 2, 3, 4, A, 5, 6] returns [(A,A)]
+    # Ex: [A, A, 2, 3, 4, 5, 5] returns [(A,A), (5,5)]
+    pass
 
-def get_rank(deck: Deck) -> Rank:
-    if __is_royal_flush(deck):
-        return Rank.ROYAL_FLUSH
-    if __is_straight_flush(deck):
-        return Rank.STRAIGHT_FLUSH
-    if __is_four_of_a_kind(deck):
-        return Rank.FOUR_OF_A_KIND
-    if __is_full_house(deck):
-        return Rank.FULL_HOUSE
-    if __is_flush(deck):
-        return Rank.FLUSH
-    if __is_straight(deck):
-        return Rank.STRAIGHT
-    if __is_three_of_a_kind(deck):
-        return Rank.THREE_OF_A_KIND
-    if __is_two_pair(deck):
-        return Rank.TWO_PAIR
-    if __is_one_pair(deck):
-        return Rank.ONE_PAIR
+
+def __is_four_of_a_kind(deck: Deck):
+    pass
+
+
+def __is_full_house(deck):
+    pass
+
+
+def __is_three_of_a_kind(deck):
+    pass
+
+
+def __is_two_pair(deck):
+    pass
+
+
+def __is_one_pair(deck):
+    pass
+
+
+def get_rank(deck: Deck) -> WinningRank:
+    tests: List[Callable] = [
+        __is_royal_flush,
+        __is_straight_flush,
+        __is_four_of_a_kind,
+        __is_full_house,
+        __is_flush,
+        __is_straight,
+        __is_three_of_a_kind,
+        __is_two_pair,
+        __is_one_pair
+    ]
+
+    for test in tests:
+        deck.print()
+        print(test)
+        passed, winning_rank = test(deck)
+        if passed:
+            return winning_rank
+
     return Rank.HIGH_CARD
+    # if __is_royal_flush(deck):
+    #     return Rank.ROYAL_FLUSH
+    # if __is_straight_flush(deck):
+    #     return Rank.STRAIGHT_FLUSH
+    # if __is_four_of_a_kind(deck):
+    #     return Rank.FOUR_OF_A_KIND
+    # if __is_full_house(deck):
+    #     return Rank.FULL_HOUSE
+    # if __is_flush(deck):
+    #     return Rank.FLUSH
+    # if __is_straight(deck):
+    #     return Rank.STRAIGHT
+    # if __is_three_of_a_kind(deck):
+    #     return Rank.THREE_OF_A_KIND
+    # if __is_two_pair(deck):
+    #     return Rank.TWO_PAIR
+    # if __is_one_pair(deck):
+    #     return Rank.ONE_PAIR
+    # return Rank.HIGH_CARD
 
-
-def __is_one_pair(deck: Deck) -> bool:
-    for card in deck.cards:
-        for second_card in deck.cards[1:]:
-            if card.value == second_card.value:
-                return True
-    return False
-def __is_royal_flush(deck: Deck) -> bool:
-    # if any(deck.cards )
-    return True

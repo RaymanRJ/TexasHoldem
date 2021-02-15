@@ -17,3 +17,7 @@ game.betting_round()    # River betting
 game.advance_stage()    # Entering TURN
 game.community_deal()
 game.betting_round()    # Final betting
+
+from src.Classes.CardClasses.Card import Value
+for value in Value:
+    print(value.value)
