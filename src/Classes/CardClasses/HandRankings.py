@@ -55,11 +55,44 @@ def __is_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
     return False, None
 
 
+def __is_straight(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
+    deck.cards.sort(key=lambda card: card.value)
+    cards = deck.cards
+
+    # Edge case: 10, J, Q, K, A --> A is considered a low card.
+    values = [Value.ACE, Value.KING, Value.QUEEN, Value.JACK, Value.TEN]
+    matches = 0
+    for value in values:
+        if any(c.Value for c in cards is value):
+            matches += 1
+    if matches >= 5:
+        return True, WinningRank(Rank.STRAIGHT, cards)
+
+    # five in a row
+    for pos, card in enumerate(cards):
+        if pos + 4 > 6:
+            return False, None
+        if cards[pos + 4].value == card.value + 4:
+            return True, WinningRank(Rank.STRAIGHT, cards)
+
+    return False, None
+
+
 def __is_straight_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
     is_flush, wining_rank = __is_flush(deck)
-    if is_flush:
-        if wining_rank.cards[-1].value - wining_rank.cards[-5] == 4:
-            return True, wining_rank
+    is_straight, winning_rank = __is_straight(deck)
+
+    if is_straight and is_flush:
+        return True, WinningRank(Rank.STRAIGHT_FLUSH, deck.cards)
+
+    return False, None
+
+
+def __is_royal_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
+    is_straight_flush, winning_rank = __is_straight_flush(deck)
+    if is_straight_flush:
+        if winning_rank.cards[0].value is Value.ACE and winning_rank.cards[-4].value is Value.TEN:
+            return True, winning_rank
     return False, None
 
 
