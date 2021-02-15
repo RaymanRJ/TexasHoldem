@@ -86,6 +86,15 @@ class TestHandRank(unittest.TestCase):
             Card(Suit.DIAMONDS, Value.THREE),
             Card(Suit.CLUBS, Value.THREE)
         ]
+        self.high_card = [
+            Card(Suit.DIAMONDS, Value.QUEEN),
+            Card(Suit.DIAMONDS, Value.JACK),
+            Card(Suit.CLUBS, Value.TEN),
+            Card(Suit.SPADES, Value.NINE),
+            Card(Suit.SPADES, Value.FOUR),
+            Card(Suit.DIAMONDS, Value.FIVE),
+            Card(Suit.CLUBS, Value.THREE)
+        ]
         self.cards = [
             self.royal_flush_cards,
             self.straight_flush_cards,
@@ -95,7 +104,8 @@ class TestHandRank(unittest.TestCase):
             self.straight_cards,
             self.three_of_a_kind_cards,
             self.two_pairs,
-            self.one_pair
+            self.one_pair,
+            self.high_card
         ]
 
     def test_royal_flush(self):
@@ -169,6 +179,14 @@ class TestHandRank(unittest.TestCase):
                 self.assertEqual(Rank.ONE_PAIR, rank.rank)
             else:
                 self.assertNotEqual(Rank.ONE_PAIR, rank.rank)
+
+    def test_high_card(self):
+        for selection in self.cards:
+            rank: WinningRank = get_rank(Deck(*selection))
+            if selection is self.high_card:
+                self.assertEqual(Rank.HIGH_CARD, rank.rank)
+            else:
+                self.assertNotEqual(Rank.HIGH_CARD, rank.rank)
 
 
 if __name__ == "__main__":

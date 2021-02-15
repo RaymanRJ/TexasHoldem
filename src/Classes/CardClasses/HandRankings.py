@@ -179,5 +179,5 @@ def get_rank(deck: Deck) -> WinningRank:
         if passed:
             return winning_rank
 
-    return Rank.HIGH_CARD   # TODO: This.
+    return WinningRank(Rank.HIGH_CARD, *deck.cards)
 
