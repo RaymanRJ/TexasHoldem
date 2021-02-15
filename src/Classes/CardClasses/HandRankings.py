@@ -1,8 +1,7 @@
 from enum import Enum
 from src.Classes.CardClasses.Deck import Deck
 from src.Classes.CardClasses.Card import Card, Suit, Value
-from typing import Tuple, List, Union, Callable
-
+from typing import Tuple, List, Union, Callable, Dict
 
 
 class Rank(Enum):
@@ -16,6 +15,7 @@ class Rank(Enum):
     TWO_PAIR = 8
     ONE_PAIR = 9
     HIGH_CARD = 10
+
 
 class WinningRank:
     __rank: Rank
@@ -64,7 +64,6 @@ def __is_straight(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
     matches = 0
     for value in values:
         if card_values.__contains__(value):
-        # if any(c.value for c in cards is value):
             matches += 1
     if matches >= 5:
         return True, WinningRank(Rank.STRAIGHT, *deck.cards)
@@ -101,30 +100,65 @@ def __is_royal_flush(deck: Deck) -> Tuple[bool, Union[WinningRank, None]]:
     return False, None
 
 
-def __get_pairs(deck: Deck) -> List[Tuple[Card, ...]]:
-    # Ex: [A, 2, 3, 4, A, 5, 6] returns [(A,A)]
-    # Ex: [A, A, 2, 3, 4, 5, 5] returns [(A,A), (5,5)]
-    pass
-
-
 def __is_four_of_a_kind(deck: Deck):
-    pass
+    matches = __get_value_matches(deck)
+    for value, occurrences in matches.items():
+        if occurrences == 4:
+            return True, WinningRank(Rank.FOUR_OF_A_KIND, *deck.cards)
+    return False, None
+
+
+def __get_value_matches(deck: Deck) -> Dict[Value, int]:
+    match_dict: Dict[Value, int] = dict()
+    for card in deck.cards:
+        if card.value in match_dict.keys():
+            match_dict[card.value] = match_dict[card.value] + 1
+        else:
+            match_dict[card.value] = 1
+    return match_dict
 
 
 def __is_full_house(deck):
-    pass
+    matches = sorted(__get_value_matches(deck).items(), key=lambda item: item[1])
+    found_a_triple = False
+    for value in reversed(matches):
+        if value[1] >= 3:
+            if found_a_triple:
+                return True, WinningRank(Rank.FULL_HOUSE, *deck.cards)
+            else:
+                found_a_triple = True
+        elif value[1] >= 2:
+            if found_a_triple:
+                return True, WinningRank(Rank.FULL_HOUSE, *deck.cards)
+    return False, None
 
 
 def __is_three_of_a_kind(deck):
-    pass
+    matches = __get_value_matches(deck)
+    for value, occurrences in matches.items():
+        if occurrences >= 3:
+            return True, WinningRank(Rank.THREE_OF_A_KIND, *deck.cards)
+    return False, None
 
 
 def __is_two_pair(deck):
-    pass
+    matches = __get_value_matches(deck)
+    found_a_match = False
+    for value, occurrences in matches.items():
+        if occurrences >= 2:
+            if found_a_match:
+                return True, WinningRank(Rank.TWO_PAIR, *deck.cards)
+            else:
+                found_a_match = True
+    return False, None
 
 
 def __is_one_pair(deck):
-    pass
+    matches = __get_value_matches(deck)
+    for value, occurrences in matches.items():
+        if occurrences >= 2:
+            return True, WinningRank(Rank.ONE_PAIR, *deck.cards)
+    return False, None
 
 
 def get_rank(deck: Deck) -> WinningRank:
