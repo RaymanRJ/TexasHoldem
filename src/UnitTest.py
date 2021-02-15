@@ -44,9 +44,9 @@ class TestHandRank(unittest.TestCase):
             Card(Suit.CLUBS, Value.THREE),
         ]
         self.cards = [
-            self.royal_flush_cards
+            # self.royal_flush_cards,
             # self.straight_flush_cards,
-            # self.flush_cards,
+            self.flush_cards
             # self.straight_cards
         ]
 
@@ -54,10 +54,8 @@ class TestHandRank(unittest.TestCase):
         for selection in self.cards:
             rank: WinningRank = get_rank(Deck(*selection))
             if selection is self.straight_flush_cards:
-                print(selection)
                 self.assertEqual(Rank.STRAIGHT_FLUSH, rank.rank)
             else:
-                print(selection)
                 self.assertNotEqual(Rank.STRAIGHT_FLUSH, rank.rank)
 
 
