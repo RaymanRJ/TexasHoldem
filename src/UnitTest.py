@@ -1,5 +1,6 @@
 import unittest
 from src.Classes.CardClasses.HandRankings import *
+from src.Classes.MoneyClasses.ChipStack import *
 
 
 class TestHandRank(unittest.TestCase):
@@ -188,6 +189,20 @@ class TestHandRank(unittest.TestCase):
             else:
                 self.assertNotEqual(Rank.HIGH_CARD, rank.rank)
 
+
+class TestChips(unittest.TestCase):
+    def setUp(self) -> None:
+        self.chips_145 = Chip.get_chips(145)
+        self.chip_stack_145 = ChipStack(*self.chips_145)
+
+    def test_chips_145(self):
+        # There should be: 1 x 100, 2 x 20, 1 x 5
+        self.assertEqual(1, len([chip for chip in self.chips_145 if chip.value == 100]))
+        self.assertEqual(2, len([chip for chip in self.chips_145 if chip.value == 20]))
+        self.assertEqual(1, len([chip for chip in self.chips_145 if chip.value == 5]))
+
+    def test_chip_stack_145(self):
+        self.assertEqual(145, self.chip_stack_145.value)
 
 if __name__ == "__main__":
     unittest.main()

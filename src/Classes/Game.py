@@ -4,6 +4,7 @@ from typing import List
 from src.Classes.ActorClasses.Player import Player
 from enum import Enum
 from src.Classes.ActorClasses.CommunityCards import CommunityCards
+from src.Classes.MoneyClasses.Pot import Pot
 
 
 class Stage(Enum):
@@ -24,6 +25,7 @@ class Game(Actor):
     __players: List[Player] = []
     __community_cards: Actor
     __game_stage: Stage
+    __pot: Pot
 
     def __init__(self, num_players: int, name: str = "Game", ):
         super().__init__(name, Deck.create_new_deck())
