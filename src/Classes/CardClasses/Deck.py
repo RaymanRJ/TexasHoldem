@@ -9,9 +9,8 @@ class Deck:
 
     def __init__(self, *cards: Card):
         self.__cards = []
-        if cards is not None:
-            for card in cards:
-                self.__cards.append(card)
+        for card in cards:
+            self.__cards.append(card)
 
     def add_card(self, card: Card, shuffle: bool = False) -> None:
         self.__cards.append(card)

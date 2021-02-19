@@ -14,7 +14,7 @@ class Player(Actor):
         super().__init__(name, deck)
         self.__community_cards = community_cards
         self.__is_all_in = False
-        self.__chips = ChipStack(self)
+        self.__chips = ChipStack()
 
     def get_rank(self) -> Rank:
         #TODO: Fix this logic.

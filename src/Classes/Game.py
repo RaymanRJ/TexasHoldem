@@ -22,7 +22,7 @@ class Stage(Enum):
 
 
 class Game(Actor):
-    __players: List[Player] = []
+    __players: List[Player]
     __community_cards: Actor
     __game_stage: Stage
     __pot: Pot
@@ -36,8 +36,7 @@ class Game(Actor):
         self.__community_cards = CommunityCards()
 
         # Setup Players:
-        for player in range(num_players):
-            self.__players.append(Player(f"Player {str(player)}", self.__community_cards))
+        self.__players = [Player(f"Player {str(i)}", self.__community_cards) for i in range(num_players)]
 
     def community_deal(self):
         if self.__game_stage is Stage.FLOP:
